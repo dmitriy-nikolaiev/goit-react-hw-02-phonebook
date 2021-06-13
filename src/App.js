@@ -1,24 +1,61 @@
 import { Component } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 import './App.scss';
 
-import { Section } from './components/Section';
+import { ContactForm } from './components/ContactForm/';
+import { Filter } from './components/Filter';
+import { ContactList } from './components/ContactList/';
 
 class App extends Component {
   state = {
-    good: 0,
+    contacts: [],
+    filter: '',
   };
 
-  // feedbackActionHandler = (option) => () => {
-  //   this.setState({ [option]: this.state[option] + 1 });
-  // };
+  filteredContacts = [];
+
+  addContactHandler = (event) => {
+    event.preventDefault();
+    const { name, number } = event.target.elements;
+    if (this.state.contacts.find((contact) => contact.name === name.value)) {
+      alert(`${name.value} is already in contacts.`);
+      return;
+    }
+    const newContact = {
+      id: uuidv4(),
+      name: name.value,
+      number: number.value,
+    };
+
+    this.setState({ contacts: [...this.state.contacts, newContact] });
+  };
+
+  filterHandler = (event) => {
+    const curValue = event.target.value.trim();
+    this.filteredContacts = this.state.contacts.filter((contact) =>
+      contact.name.toLowerCase().includes(curValue.toLowerCase())
+    );
+    this.setState({
+      filter: event.target.value,
+    });
+  };
+
+  deleteHandler = (id) => () => {
+    this.setState({ contacts: this.state.contacts.filter((contact) => contact.id !== id) });
+  };
 
   render() {
     return (
       <div className="App">
-        <Section title="Phone book">
-          <div>Data</div>
-        </Section>
+        <h1>Phonebook</h1>
+        <ContactForm addContactHandler={this.addContactHandler} />
+        <h2>Contacts</h2>
+        <Filter filter={this.state.filter} handleChange={this.filterHandler} />
+        <ContactList
+          contacts={this.state.filter ? this.filteredContacts : this.state.contacts}
+          deleteHandler={this.deleteHandler}
+        />
       </div>
     );
   }
