@@ -1,5 +1,5 @@
 import { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 export class ContactListItem extends Component {
   render() {
@@ -16,3 +16,9 @@ export class ContactListItem extends Component {
     );
   }
 }
+
+ContactListItem.propTypes = {
+  name: PropTypes.string,
+  number: PropTypes.string,
+  deleteHandler: PropTypes.func,
+};

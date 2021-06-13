@@ -13,8 +13,6 @@ class App extends Component {
     filter: '',
   };
 
-  filteredContacts = [];
-
   addContactHandler = (event) => {
     event.preventDefault();
     const { name, number } = event.target.elements;
@@ -32,10 +30,6 @@ class App extends Component {
   };
 
   filterHandler = (event) => {
-    const curValue = event.target.value.trim();
-    this.filteredContacts = this.state.contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(curValue.toLowerCase())
-    );
     this.setState({
       filter: event.target.value,
     });
@@ -53,7 +47,8 @@ class App extends Component {
         <h2>Contacts</h2>
         <Filter filter={this.state.filter} handleChange={this.filterHandler} />
         <ContactList
-          contacts={this.state.filter ? this.filteredContacts : this.state.contacts}
+          contacts={this.state.contacts}
+          filter={this.state.filter}
           deleteHandler={this.deleteHandler}
         />
       </div>
